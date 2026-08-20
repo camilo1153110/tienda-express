@@ -9,10 +9,8 @@ interface ProductFormProps {
 function ProductForm({ productoInicial, onGuardar }: ProductFormProps) {
   const [producto, setProducto] = useState<Producto>(productoInicial);
 
-  // R8: valor derivado, NUNCA useState
   const hayCambios = JSON.stringify(producto) !== JSON.stringify(productoInicial);
 
-  // R4: manejador genérico para campos de primer nivel
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setProducto(prev => ({
@@ -21,7 +19,6 @@ function ProductForm({ productoInicial, onGuardar }: ProductFormProps) {
     }));
   };
 
-  // R3: manejador para proveedor.nombre (2 niveles)
   const handleProveedorNombre = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProducto(prev => ({
       ...prev,
@@ -32,7 +29,6 @@ function ProductForm({ productoInicial, onGuardar }: ProductFormProps) {
     }));
   };
 
-  // R3: manejador para proveedor.contacto.telefono / ciudad (3 niveles)
   const handleContacto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProducto(prev => ({
@@ -47,112 +43,126 @@ function ProductForm({ productoInicial, onGuardar }: ProductFormProps) {
     }));
   };
 
-  // R6: descartar cambios
+  const romperTodo = () => {
+    producto.precio = 99999;
+    console.log('[romperTodo] producto.precio mutado directamente a 99999 en memoria:', producto);
+  };
+
   const descartar = () => {
     setProducto(productoInicial);
   };
 
   return (
     <div className="card p-3">
-      <h5 className="card-title">Editar Producto</h5>
-
-      <div className="mb-2">
-        <label className="form-label">Nombre</label>
-        <input
-          type="text"
-          className="form-control"
-          name="nombre"
-          value={producto.nombre}
-          onChange={handleChange}
-        />
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h5 className="card-title mb-0">Editar Producto</h5>
+        <button className="btn btn-outline-danger btn-sm" onClick={romperTodo}>
+           Probar romperTodo (Mutación directa)
+        </button>
       </div>
 
-      <div className="mb-2">
-        <label className="form-label">Categoría</label>
-        <select
-          className="form-select"
-          name="categoria"
-          value={producto.categoria}
-          onChange={handleChange}
-        >
-          <option value="abarrotes">Abarrotes</option>
-          <option value="aseo">Aseo</option>
-          <option value="bebidas">Bebidas</option>
-        </select>
+      <div className="row g-2 mb-2">
+        <div className="col-md-6">
+          <label className="form-label small">Nombre</label>
+          <input
+            type="text"
+            className="form-control"
+            name="nombre"
+            value={producto.nombre}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="col-md-6">
+          <label className="form-label small">Categoría</label>
+          <select
+            className="form-select"
+            name="categoria"
+            value={producto.categoria}
+            onChange={handleChange}
+          >
+            <option value="abarrotes">Abarrotes</option>
+            <option value="aseo">Aseo</option>
+            <option value="bebidas">Bebidas</option>
+          </select>
+        </div>
+
+        <div className="col-md-6">
+          <label className="form-label small">Precio</label>
+          <input
+            type="number"
+            className="form-control"
+            name="precio"
+            value={producto.precio}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="col-md-6">
+          <label className="form-label small">Stock</label>
+          <input
+            type="number"
+            className="form-control"
+            name="stock"
+            value={producto.stock}
+            onChange={handleChange}
+          />
+        </div>
       </div>
 
-      <div className="mb-2">
-        <label className="form-label">Precio</label>
-        <input
-          type="number"
-          className="form-control"
-          name="precio"
-          value={producto.precio}
-          onChange={handleChange}
-        />
+      <h6 className="mt-2 text-secondary small">Datos del Proveedor</h6>
+      <div className="row g-2 mb-3">
+        <div className="col-md-4">
+          <label className="form-label small">Nombre Proveedor</label>
+          <input
+            type="text"
+            className="form-control"
+            value={producto.proveedor.nombre}
+            onChange={handleProveedorNombre}
+          />
+        </div>
+
+        <div className="col-md-4">
+          <label className="form-label small">Teléfono</label>
+          <input
+            type="text"
+            className="form-control"
+            name="telefono"
+            value={producto.proveedor.contacto.telefono}
+            onChange={handleContacto}
+          />
+        </div>
+
+        <div className="col-md-4">
+          <label className="form-label small">Ciudad</label>
+          <input
+            type="text"
+            className="form-control"
+            name="ciudad"
+            value={producto.proveedor.contacto.ciudad}
+            onChange={handleContacto}
+          />
+        </div>
       </div>
 
-      <div className="mb-2">
-        <label className="form-label">Stock</label>
-        <input
-          type="number"
-          className="form-control"
-          name="stock"
-          value={producto.stock}
-          onChange={handleChange}
-        />
-      </div>
-
-      <hr />
-      <h6>Proveedor</h6>
-
-      <div className="mb-2">
-        <label className="form-label">Nombre del proveedor</label>
-        <input
-          type="text"
-          className="form-control"
-          value={producto.proveedor.nombre}
-          onChange={handleProveedorNombre}
-        />
-      </div>
-
-      <div className="mb-2">
-        <label className="form-label">Teléfono</label>
-        <input
-          type="text"
-          className="form-control"
-          name="telefono"
-          value={producto.proveedor.contacto.telefono}
-          onChange={handleContacto}
-        />
-      </div>
-
-      <div className="mb-2">
-        <label className="form-label">Ciudad</label>
-        <input
-          type="text"
-          className="form-control"
-          name="ciudad"
-          value={producto.proveedor.contacto.ciudad}
-          onChange={handleContacto}
-        />
-      </div>
-
-      <div className="d-flex gap-2 mt-2">
+      <div className="d-flex gap-2">
         <button
-          className="btn btn-success"
+          className="btn btn-primary"
           onClick={() => onGuardar(producto)}
           disabled={!hayCambios}
         >
           Guardar
         </button>
-        <button className="btn btn-outline-secondary" disabled={!hayCambios} onClick={descartar}>
+        <button
+          className="btn btn-outline-secondary"
+          onClick={descartar}
+          disabled={!hayCambios}
+        >
           Descartar cambios
         </button>
       </div>
 
-      {/* R7: panel de vista previa */}
-      <pre className="bg-light p-2 mt-3 rounded" style={{ textAlign: 'left' }}>
+      <pre className="bg-light p-2 mt-3 rounded small" style={{ maxHeight: '180px', overflow: 'auto' }}>
         {JSON.stringify(producto, null, 2)}
       </pre>
     </div>
