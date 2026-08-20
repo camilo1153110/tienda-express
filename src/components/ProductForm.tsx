@@ -43,23 +43,13 @@ function ProductForm({ productoInicial, onGuardar }: ProductFormProps) {
     }));
   };
 
-  const romperTodo = () => {
-    producto.precio = 99999;
-    console.log('[romperTodo] producto.precio mutado directamente a 99999 en memoria:', producto);
-  };
-
   const descartar = () => {
     setProducto(productoInicial);
   };
 
   return (
     <div className="card p-3">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="card-title mb-0">Editar Producto</h5>
-        <button className="btn btn-outline-danger btn-sm" onClick={romperTodo}>
-           Probar romperTodo (Mutación directa)
-        </button>
-      </div>
+      <h5 className="card-title mb-3">Editar Producto</h5>
 
       <div className="row g-2 mb-2">
         <div className="col-md-6">
