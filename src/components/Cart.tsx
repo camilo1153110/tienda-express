@@ -60,9 +60,8 @@ function Cart({ items, productos, onAgregar, onIncrementar, onDecrementar, onQui
         <p className="text-muted small">El carrito está vacío</p>
       ) : (
         <ul className="list-group mb-3">
-          {items.map((item, i) => (
-            // ⚠️ BUG TEMPORAL: key por índice — haz la prueba y avísame para corregirlo
-            <li key={i} className="list-group-item d-flex justify-content-between align-items-center py-2">
+          {items.map((item) => (
+            <li key={item.productoId} className="list-group-item d-flex justify-content-between align-items-center py-2">
               <div className="small">
                 <strong>{item.nombre}</strong> — ${item.precio.toLocaleString('es-CO')} × {item.cantidad} = ${(item.precio * item.cantidad).toLocaleString('es-CO')}
               </div>
